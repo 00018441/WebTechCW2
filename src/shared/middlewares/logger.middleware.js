@@ -3,7 +3,7 @@ import path from "path";
 
 const logFilePath = path.join(import.meta.dirname, "../../run.log");
 
-async function log(level, text, req = null) {
+function log(level, text, req = null) {
     const timestamp = new Date().toISOString();
     const method = req?.method || "";
     const endpoint = req?.originalUrl || "";
@@ -12,11 +12,7 @@ async function log(level, text, req = null) {
     const logEntry = `tskv\ttimestamp=${timestamp}\tlevel=${level}\tmethod=${method}\turi=${endpoint}\tbody=${requestBody}\ttext="${text}"\n`;
 
     console.log(logEntry.trim());
-    try {
-        await fs.appendFile(logFilePath, logEntry);
-    } catch (err) {
-        console.error("failed to write log:", err);
-    }
+    fs.appendFile(logFilePath, logEntry).catch(console.error);
 }
 
 function requestLogger(req, _res, next) {
