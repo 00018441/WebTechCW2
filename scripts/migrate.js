@@ -28,11 +28,14 @@ async function runMigrations() {
             const sql = readFileSync(filePath, "utf8");
             console.log(`running migration: ${file}`);
 
-            await client.query(sql);
-            await client.query(
-                "INSERT INTO migrations (filename) VALUES ($1)",
+            const { rowCount } = await client.query(
+                `INSERT INTO migrations (filename)
+                VALUES ($1) ON CONFLICT DO NOTHING`,
                 [file],
             );
+            if (rowCount === 1) {
+                await client.query(sql);
+            }
         }
 
         await client.query("COMMIT");

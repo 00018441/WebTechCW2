@@ -1,11 +1,13 @@
-DROP TYPE IF EXISTS value_type;
+DROP TYPE IF EXISTS value_type CASCADE;
 CREATE TYPE value_type AS ENUM ('text', 'number', 'boolean', 'dropdown');
 
+DROP TABLE IF EXISTS csconfig.setting_categories CASCADE;
 CREATE TABLE IF NOT EXISTS csconfig.setting_categories (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name TEXT UNIQUE NOT NULL
 );
 
+DROP TABLE IF EXISTS csconfig.post_settings CASCADE;
 CREATE TABLE IF NOT EXISTS csconfig.post_settings (
     setting_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     post_id UUID NOT NULL REFERENCES csconfig.posts(id) ON DELETE CASCADE,
