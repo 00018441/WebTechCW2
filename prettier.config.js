@@ -8,7 +8,7 @@ const config = {
     jsxSingleQuote: false,
     trailingComma: "all",
     quoteProps: "consistent",
-    printWidth: 80,
+    printWidth: 120,
 };
 
 export default config;

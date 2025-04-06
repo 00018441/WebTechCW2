@@ -5,18 +5,28 @@
     "main": "src/index.js",
     "type": "module",
     "scripts": {
-        "start": "node src/index.js"
+        "start": "node src/index.js",
+        "dev": "nodemon --legacy-watch src/index.js"
     },
     "author": "00018441",
     "license": "ISC",
     "devDependencies": {
+        "nodemon": "^3.1.9",
         "prettier": "3.5.3"
     },
     "dependencies": {
+        "bcryptjs": "^3.0.2",
+        "cookie-parser": "^1.4.7",
         "dotenv": "^16.4.7",
+        "ejs": "^3.1.10",
         "express": "^4.21.2",
+        "express-ejs-layouts": "^2.5.1",
         "express-promise-router": "^4.1.1",
-        "pg": "^8.14.1"
+        "htmx.org": "^2.0.4",
+        "jsonwebtoken": "^9.0.2",
+        "pg": "^8.14.1",
+        "uuid": "^11.1.0",
+        "zod": "^3.24.2"
     },
     "imports": {
         "#*": "./src/*"

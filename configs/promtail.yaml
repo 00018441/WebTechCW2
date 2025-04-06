@@ -1,0 +1,33 @@
+server:
+    http_listen_port: 9080
+    grpc_listen_port: 0
+
+positions:
+    filename: /tmp/positions.yaml
+
+clients:
+    - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+    - job_name: run_log
+      static_configs:
+          - targets:
+                - localhost
+            labels:
+                job: run_log
+                __path__: /var/log/run.log
+      pipeline_stages:
+          - regex:
+                expression: '^tskv\ttimestamp=(?P<timestamp>[^\t]+)\tlevel=(?P<level>[^\t]+)\trequest_id=(?P<request_id>[^\t]+)\tmethod=(?P<method>[^\t]+)\turi=(?P<uri>[^\t]+)\tbody=(?P<body>[^\t]+)\tfile=(?P<file>[^\t]+)\tline=(?P<line>[^\t]+)\ttext=(?P<text>[^\t]+)$'
+          - timestamp:
+                source: timestamp
+                format: "2006-01-02T15:04:05.000Z"
+          - labels:
+                level:
+                request_id:
+                method:
+                uri:
+                body:
+                file:
+                line:
+                text:

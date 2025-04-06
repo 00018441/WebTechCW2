@@ -15,16 +15,19 @@ services:
             interval: 5s
             timeout: 5s
             retries: 10
+        networks:
+            - db
 
     app:
         build:
             context: .
-        restart: unless-stopped
         volumes:
             - .:/app
+        restart: unless-stopped
         depends_on:
             db:
                 condition: service_healthy
+                restart: true
         environment:
             DB_HOST: ${DB_HOST}
             DB_USER: ${DB_USER}
@@ -32,6 +35,53 @@ services:
             DB_PASSWORD: ${DB_PASSWORD}
         ports:
             - "${NODE_PORT}:${NODE_PORT}"
+        networks:
+            - db
+
+    loki:
+        image: grafana/loki:latest
+        user: "root"
+        ports:
+            - "3100:3100"
+        volumes:
+            - ./configs/loki.yaml:/etc/loki/loki.yaml
+            - ./loki-data:/loki
+        command: -config.file=/etc/loki/loki.yaml
+        networks:
+            - loki
+
+    promtail:
+        image: grafana/promtail:latest
+        ports:
+            - "9080:9080"
+        volumes:
+            - ./configs/promtail.yaml:/etc/promtail/config.yaml
+            - ./src:/var/log
+            - ./promtail-data:/tmp
+        command: -config.file=/etc/promtail/config.yaml
+        networks:
+            - loki
+
+    grafana:
+        image: grafana/grafana:latest
+        environment:
+            - GF_AUTH_ANONYMOUS_ENABLED=true
+            - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+            - GF_FEATURE_TOGGLES_ENABLE=alertingSimplifiedRouting,alertingQueryAndExpressionsStepMode
+        ports:
+            - "3000:3000"
+        depends_on:
+            - loki
+        volumes:
+            - grafana-storage:/var/lib/grafana
+            - ./provisioning:/etc/grafana/provisioning
+        networks:
+            - loki
 
 volumes:
     db-data:
+    grafana-storage:
+
+networks:
+    loki:
+    db:
