@@ -1,20 +1,20 @@
-export const StatusCode = {
-    kOk: 200,
-    kCreated: 201,
-    kAccepted: 202,
-    kNoContent: 204,
+export class StatusCode {
+    static kOk = 200;
+    static kCreated = 201;
+    static kAccepted = 202;
+    static kNoContent = 204;
 
-    kBadRequest: 400,
-    kUnauthenticated: 401,
-    kForbidden: 403,
-    kNotFound: 404,
-    kMethodNotAllowed: 405,
-    kNotAcceptable: 406,
-    kRequestTimeout: 408,
+    static kBadRequest = 400;
+    static kUnauthenticated = 401;
+    static kForbidden = 403;
+    static kNotFound = 404;
+    static kMethodNotAllowed = 405;
+    static kNotAcceptable = 406;
+    static kRequestTimeout = 408;
 
-    kServerError: 500,
-    kNotImplemented: 501,
-    kBadGateway: 502,
-    kServiceUnavailable: 503,
-    kGatewayTimeout: 504,
-};
+    static kServerError = 500;
+    static kNotImplemented = 501;
+    static kBadGateway = 502;
+    static kServiceUnavailable = 503;
+    static kGatewayTimeout = 504;
+}
