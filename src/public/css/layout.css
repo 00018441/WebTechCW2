@@ -1,0 +1,64 @@
+#response-message-container {
+    width: 80%;
+    margin: 10px auto;
+
+    #error-message,
+    #success-message {
+        display: flex;
+        justify-content: space-between;
+        vertical-align: middle;
+        align-items: center;
+        width: 100%;
+        height: 45px;
+        padding: 12px 15px;
+        border-radius: 8px;
+    }
+
+    #error-message {
+        background-color: rgba(232, 73, 69, 0.4);
+    }
+
+    #success-message {
+        background-color: rgba(91, 181, 87, 0.4);
+    }
+
+    .dismiss-button {
+        position: relative;
+        width: 30px;
+        height: 30px;
+        background-color: transparent;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition:
+            background-color 0.3s ease,
+            transform 0.2s ease;
+
+        .line {
+            position: absolute;
+            width: 20px;
+            height: 2px;
+            background-color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .line1 {
+            transform: rotate(45deg);
+        }
+
+        .line2 {
+            transform: rotate(-45deg);
+        }
+    }
+
+    .dismiss-button:hover {
+        background-color: rgba(169, 169, 169, 0.5);
+    }
+
+    .dismiss-button:active {
+        transform: scale(0.9);
+    }
+}

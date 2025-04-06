@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>00018441</title>
+
+        <script src="/js/htmx.min.js"></script>
+        <script src="/js/index.js"></script>
+        <script src="/js/handlers.js"></script>
+
+        <link rel="stylesheet" href="/css/index.css" />
+        <link rel="stylesheet" href="/css/layout.css" />
+        <link rel="stylesheet" href="/css/navbar.css" />
+        <link rel="stylesheet" href="/css/auth.css" />
+    </head>
+    <body>
+        <!-- navbar -->
+        <nav>
+            <div id="nav-wrapper">
+                <div id="logo" hx-get="/" hx-target="body">CSConfig</div>
+                <ul class="nav" id="nav-desktop">
+                    <li>Company</li>
+                    <li>Contacts</li>
+                    <li>FAQ</li>
+                    <li>About</li>
+                    <li id="auth-container">
+                        <div id="nav-username"></div>
+                        <div id="auth-status-buttons"></div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <!-- navbar -->
+
+        <!-- loaders -->
+        <div
+            id="user-profile-loader"
+            hx-get="/api/users/profile"
+            hx-trigger="load"
+            hx-target="#nav-username"
+            hx-swap="outerHTML"
+        >
+        </div>
+        <div
+            id="auth-status-buttons-loader"
+            hx-get="/api/auth/minions/status-buttons"
+            hx-trigger="load"
+            hx-target="#auth-status-buttons"
+        >
+        </div>
+        <!-- loaders -->
+
+        <div id="response-message-container"></div>
+
+        <div id="content">
+            <%- body %>
+        </div>
+
+        <!-- statement -->
+        <div id="statement">
+            This website was created to fulfill Web Technology
+            module&apos;s requirements and does not represent an actual
+            company or service
+        </div>
+        <!-- statement -->
+    </body>
+</html>
