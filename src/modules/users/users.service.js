@@ -1,0 +1,41 @@
+import { query } from "#db/index.js";
+import { sqlQueries } from "#db/sql-queries.js";
+import { parameterize } from "#shared/utils/index.js";
+import { BadRequestError } from "#shared/errors/index.js";
+import { ErrorCode } from "#modules/users/users.constants.js";
+
+export class UsersService {
+    static async createUser(userCredentials) {
+        const { rows, rowCount } = await query(sqlQueries.kInsertUser, [
+            userCredentials.username,
+            userCredentials.email,
+            userCredentials.passwordHash,
+        ]);
+
+        if (rowCount === 0) {
+            throw new BadRequestError(ErrorCode.kConflictingCredentials);
+        }
+
+        return rows[0]["id"];
+    }
+
+    static async getUserByEmail(email) {
+        const { rows, rowCount } = await query(parameterize(sqlQueries.kSelectUser, { param: "email" }), [email]);
+
+        if (rowCount === 0) {
+            throw new BadRequestError(ErrorCode.kInvalidEmail);
+        }
+
+        return rows[0];
+    }
+
+    static async getUserById(id) {
+        const { rows, rowCount } = await query(parameterize(sqlQueries.kSelectUser, { param: "id" }), [id]);
+
+        if (rowCount === 0) {
+            throw new BadRequestError(ErrorCode.kInvalidId);
+        }
+
+        return rows[0];
+    }
+}
