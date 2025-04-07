@@ -1,0 +1,10 @@
+<button
+    class="load-more-button"
+    hx-get="{{usersListUrl}}?page={{page}}&limit={{limit}}&username={{username}}"
+    hx-target="#users-list-container"
+    hx-swap="beforeend"
+    hx-trigger="click"
+    hx-boost="true"
+>
+    Load More
+</button>

@@ -1,16 +1,16 @@
 import Router from "express-promise-router";
 import { AuthService } from "./auth.service.js";
-import { ErrorCode } from "./auth.constants.js";
 import { authMinions } from "./minions/auth-minions.js";
 import { validateRequestBody } from "#shared/validators/index.js";
-import { registerDtoSchema, loginDtoSchema } from "./schemas/index.js";
-import { Endpoint, StatusCode } from "#shared/constants/index.js";
+import { registerSchema, loginSchema } from "./schemas/index.js";
+import { Endpoint, StatusCode, ErrorCode } from "#shared/constants/index.js";
 import { getUserFromToken } from "#shared/middlewares/index.js";
 import { parameterize } from "#shared/utils/index.js";
+import { sharedMinions } from "#shared/minions/shared-minions.js";
 
 export const AuthController = Router();
 
-AuthController.post(Endpoint.Api.kRegister, validateRequestBody(registerDtoSchema), async function (req, res) {
+AuthController.post(Endpoint.Api.kRegister, validateRequestBody(registerSchema), async function (req, res) {
     req.logger.info("start handling");
     try {
         const token = await AuthService.register(req.body);
@@ -20,7 +20,7 @@ AuthController.post(Endpoint.Api.kRegister, validateRequestBody(registerDtoSchem
         res.setHeader("HX-Redirect", "/");
         signSuccessMessageCookie(
             res,
-            parameterize(authMinions.kSuccessMessage, { message: "Registration successful!" }),
+            parameterize(sharedMinions.kSuccessMessage, { message: "Registration successful!" }),
         );
         res.status(StatusCode.kCreated).send();
     } catch (err) {
@@ -34,26 +34,26 @@ AuthController.post(Endpoint.Api.kRegister, validateRequestBody(registerDtoSchem
             errorMessage += "Please try again.";
         }
 
-        res.status(StatusCode.kOk).send(parameterize(authMinions.kErrorMessage, { message: errorMessage }));
+        res.status(StatusCode.kOk).send(parameterize(sharedMinions.kErrorMessage, { message: errorMessage }));
     }
 });
 
-AuthController.post(Endpoint.Api.kLogin, validateRequestBody(loginDtoSchema), async function (req, res) {
+AuthController.post(Endpoint.Api.kLogin, validateRequestBody(loginSchema), async function (req, res) {
     try {
         const token = await AuthService.login(req.body);
 
         signTokenCookie(res, token);
 
         res.setHeader("HX-Redirect", "/");
-        signSuccessMessageCookie(res, parameterize(authMinions.kSuccessMessage, { message: "Login successful!" }));
+        signSuccessMessageCookie(res, parameterize(sharedMinions.kSuccessMessage, { message: "Login successful!" }));
         res.status(StatusCode.kCreated).send();
     } catch (err) {
         req.logger.warn(`login failed: ${err.name}: ${err.message}`);
 
-        if (err.message === ErrorCode.kInvalidEmail) {
-            res.status(StatusCode.kOk).send(parameterize(authMinions.kErrorMessage, { message: "Invalid email" }));
-        } else if (err.message == ErrorCode.kInvalidPassword) {
-            res.status(StatusCode.kOk).send(parameterize(authMinions.kErrorMessage, { message: "Invalid password" }));
+        if (err.message === ErrorCode.kUserInvalidEmail) {
+            res.status(StatusCode.kOk).send(parameterize(sharedMinions.kErrorMessage, { message: "Invalid email" }));
+        } else if (err.message == ErrorCode.kUserInvalidPassword) {
+            res.status(StatusCode.kOk).send(parameterize(sharedMinions.kErrorMessage, { message: "Invalid password" }));
         } else {
             throw err;
         }
@@ -119,6 +119,6 @@ function signSuccessMessageCookie(res, message) {
     res.clearCookie("successMessage");
     res.cookie("successMessage", message, {
         secure: process.env.NODE_ENV === "production",
-        maxAge: 30000,
+        maxAge: 15000,
     });
 }

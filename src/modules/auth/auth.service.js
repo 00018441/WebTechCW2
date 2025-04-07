@@ -3,7 +3,7 @@ import { UsersService } from "#modules/users/users.service.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { log } from "#shared/middlewares/index.js";
-import { ErrorCode } from "./auth.constants.js";
+import { ErrorCode } from "#shared/constants/index.js";
 
 export class AuthService {
     static async register(userCredentials) {
@@ -32,7 +32,7 @@ export class AuthService {
             return this.generateToken(user["id"]);
         }
 
-        throw new AuthenticationError(ErrorCode.kInvalidPassword);
+        throw new AuthenticationError(ErrorCode.kUserInvalidPassword);
     }
 
     static async hashPassword(password) {

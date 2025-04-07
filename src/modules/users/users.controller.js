@@ -1,10 +1,12 @@
 import Router from "express-promise-router";
-import { usersMinions } from "./minions/users-minions.js";
-import { getUserFromToken } from "#shared/middlewares/index.js";
-import { parameterize } from "#shared/utils/index.js";
-import { ErrorCode } from "./users.constants.js";
 import { UsersService } from "./users.service.js";
-import { StatusCode, Endpoint } from "#shared/constants/index.js";
+import { parameterize, isEmpty } from "#shared/utils/index.js";
+import { usersMinions } from "./minions/users-minions.js";
+import { validateQueryParams } from "#shared/validators/index.js";
+import { usersParamsSchema } from "./schemas/users-params.schema.js";
+import { getUserFromToken, authorizeAccess } from "#shared/middlewares/index.js";
+import { StatusCode, Endpoint, ErrorCode, Role } from "#shared/constants/index.js";
+import { sharedMinions } from "#shared/minions/shared-minions.js";
 
 export const UsersController = Router();
 
@@ -15,12 +17,12 @@ UsersController.get(Endpoint.Api.kProfile, getUserFromToken, async function (req
 
         let response = parameterize(usersMinions.kNavUsername, { username: user.username });
         if (isAdmin(user)) {
-            response += usersMinions.kAdminUsersPageLink;
+            response += parameterize(usersMinions.kAdminUsersPageLink, { usersListUrl: Endpoint.Pages.kUsers });
         }
 
         res.status(StatusCode.kOk).send(response);
     } catch (err) {
-        if (err.message === ErrorCode.kInvalidId) {
+        if (err.message === ErrorCode.kUserInvalidId) {
             req.logger.info(`invalid user id, sending guest`);
             res.status(StatusCode.kOk).send(parameterize(usersMinions.kNavUsername, { username: "Guest" }));
         } else {
@@ -29,6 +31,91 @@ UsersController.get(Endpoint.Api.kProfile, getUserFromToken, async function (req
     }
 });
 
+UsersController.get(
+    Endpoint.Pages.kUsers,
+    getUserFromToken,
+    authorizeAccess(Role.kAdmin),
+    validateQueryParams(usersParamsSchema),
+    async function (req, res) {
+        try {
+            const { page = 0, limit = 2 /*5*/, username = "" } = req.query;
+            req.logger.info(`fetching users: page=${page}, limit=${limit}, username=${username}`);
+
+            const users = await UsersService.getUsers(page, limit, username);
+            const cards = users
+                .map((user) => {
+                    return parameterize(usersMinions.kUserCard, {
+                        username: user.username,
+                        email: user.email,
+                        userRole: user.role,
+                        userStatus: user.status,
+                        postsCount: user["posts_count"],
+                        userDeleteUrl: `${Endpoint.Api.kUserDelete}/${user.id}`,
+                    });
+                })
+                .join("");
+
+            const loadMoreButton =
+                users.length === limit
+                    ? parameterize(usersMinions.kLoadMoreButton, {
+                          usersListUrl: Endpoint.Pages.kUsers,
+                          page: page + 1,
+                          limit,
+                          username,
+                      })
+                    : (() => (res.setHeader("HX-Trigger", "no-more-users"), ""))();
+
+            let response = parameterize(usersMinions.kUsersPage, {
+                userCards: cards,
+                usersListUrl: Endpoint.Pages.kUsers,
+            });
+
+            let errorMessage = "";
+            req.errorMessages ??= [];
+            if (!isEmpty(req.errorMessages)) {
+                errorMessage = req.errorMessages.at(0);
+                req.errorMessages.shift();
+            }
+
+            if (isRepeatedRequest(page)) {
+                return res.status(StatusCode.kOk).send(cards + loadMoreButton + errorMessage);
+            }
+
+            res.status(StatusCode.kOk).send(response + loadMoreButton + errorMessage);
+        } catch (err) {
+            throw err;
+        }
+    },
+);
+
+UsersController.delete(
+    `${Endpoint.Api.kUserDelete}/:userId`,
+    getUserFromToken,
+    authorizeAccess(Role.kAdmin),
+    async function (req, res) {
+        try {
+            const { userId } = req.params;
+            await UsersService.deleteUser(userId);
+            req.logger.info(`deleted user ${userId}`);
+
+            res.status(StatusCode.kOk).send();
+        } catch (err) {
+            if (err.message === ErrorCode.kUserInvalidId) {
+                req.logger.info(`failed to delete user, invalid id`);
+                res.status(StatusCode.kOk).send(
+                    parameterize(sharedMinions.kErrorMessage, { message: "Invalid user Id" }),
+                );
+            } else {
+                throw err;
+            }
+        }
+    },
+);
+
 function isAdmin(user) {
     return user.role === "admin";
+}
+
+function isRepeatedRequest(page) {
+    return page > 0;
 }

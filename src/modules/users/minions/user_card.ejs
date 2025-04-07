@@ -1,0 +1,31 @@
+<div class="user-card">
+    <button
+        class="delete-user-button"
+        hx-delete="{{userDeleteUrl}}"
+        hx-target="closest .user-card"
+        hx-swap="outerHTML"
+    >
+        Delete
+    </button>
+
+    <div class="user-info-row">
+        <div class="user-info-label">Username:</div>
+        <div class="user-info-value">{{username}}</div>
+    </div>
+    <div class="user-info-row">
+        <div class="user-info-label">Email:</div>
+        <div class="user-info-value">{{email}}</div>
+    </div>
+    <div class="user-info-row">
+        <div class="user-info-label">Role:</div>
+        <div class="user-info-value user-role {{userRole}}">{{userRole}}</div>
+    </div>
+    <div class="user-info-row">
+        <div class="user-info-label">Status:</div>
+        <div class="user-info-value user-status {{userStatus}}">{{userStatus}}</div>
+    </div>
+    <div class="user-info-row">
+        <div class="user-info-label">No. of Posts:</div>
+        <div class="user-info-value posts-count">{{postsCount}}</div>
+    </div>
+</div>

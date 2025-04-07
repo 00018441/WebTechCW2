@@ -1,0 +1,19 @@
+<h1 id="users-page-title">Users</h1>
+
+<form
+    id="search-form"
+    hx-get="{{usersListUrl}}"
+    hx-target="#content"
+    hx-swap="innerHTML"
+>
+    <input
+        type="text"
+        name="username"
+        placeholder="Search by username…"
+        required
+    />
+    <button type="submit">Find</button>
+</form>
+
+<div id="users-list-container">{{userCards}}</div>
+<div id="load-more-button-container"></div>

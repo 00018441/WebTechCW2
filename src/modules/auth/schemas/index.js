@@ -1,2 +1,2 @@
-export { loginDtoSchema } from "./login.schema.js";
-export { registerDtoSchema } from "./register.schema.js";
+export { loginSchema } from "./login.schema.js";
+export { registerSchema } from "./register.schema.js";
