@@ -6,6 +6,7 @@ export class Endpoint {
 
     static Pages = class {
         static kHome = "/";
+        static kUsers = "/api/pages/users";
     };
 
     static Minions = class {
@@ -17,5 +18,6 @@ export class Endpoint {
         static kRegister = "/api/auth/register";
         static kLogin = "/api/auth/login";
         static kProfile = "/api/users/profile";
+        static kUserDelete = "/api/users";
     };
 }
