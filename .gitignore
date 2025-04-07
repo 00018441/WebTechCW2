@@ -5,4 +5,5 @@ node_modules/
 # codegen
 auth-minions.js
 users-minions.js
+shared-minions.js
 sql-queries.js

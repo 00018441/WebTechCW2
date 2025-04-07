@@ -4,6 +4,7 @@ import { convertToCamelCase } from "#shared/utils/index.js";
 
 const dirname = import.meta.dirname;
 const modules = fs.readdirSync(path.join(dirname, "../src/modules")).filter((file) => !file.endsWith(".js"));
+const sharedMinionsDir = path.join(dirname, "../src/shared/minions");
 
 function generateQueryFile(moduleName, inputDir, outputFile) {
     try {
@@ -24,6 +25,11 @@ function generateQueryFile(moduleName, inputDir, outputFile) {
     } catch (err) {
         console.error("error generating Minions queries:", err);
     }
+}
+
+if (fs.existsSync(sharedMinionsDir)) {
+    const outputFile = path.join(sharedMinionsDir, "shared-minions.js");
+    generateQueryFile("shared", sharedMinionsDir, outputFile);
 }
 
 for (let i = 0; i < modules.length; ++i) {
