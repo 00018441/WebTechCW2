@@ -14,9 +14,7 @@ const pool = new pg.Pool({
 
 async function runMigrations() {
     const migrationsPath = join(__dirname, "../postgresql/migrations");
-    const migrationFiles = readdirSync(migrationsPath).filter((file) =>
-        file.endsWith(".sql"),
-    );
+    const migrationFiles = readdirSync(migrationsPath).filter((file) => file.endsWith(".sql"));
 
     const client = await pool.connect();
 
@@ -29,12 +27,15 @@ async function runMigrations() {
             console.log(`running migration: ${file}`);
 
             const { rowCount } = await client.query(
-                `INSERT INTO migrations (filename)
+                `INSERT INTO public.migrations (filename)
                 VALUES ($1) ON CONFLICT DO NOTHING`,
                 [file],
             );
+
             if (rowCount === 1) {
                 await client.query(sql);
+            } else {
+                console.log(`Migration ${file} already applied, skipping...`);
             }
         }
 
