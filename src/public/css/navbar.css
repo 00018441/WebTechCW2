@@ -55,6 +55,10 @@ nav {
     background-color: inherit;
 }
 
+#users-page-link:empty {
+    display: none;
+}
+
 #auth-container {
     display: flex;
     flex-direction: column;

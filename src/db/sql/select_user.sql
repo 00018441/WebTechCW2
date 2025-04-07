@@ -4,9 +4,10 @@
 
 SELECT
     id,
-    username,
+    role,
     email,
     status,
+    username,
     password_hash
 FROM csconfig.users
 WHERE
