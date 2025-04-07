@@ -29,5 +29,23 @@ document.addEventListener("htmx:afterRequest", function (event) {
         return history.pushState(null, "", "/login");
     }
 
+    if (event.detail.requestConfig.path.includes("pages/users")) {
+        return history.pushState(null, "", "/users");
+    }
+
     history.pushState(null, "", "/");
+});
+
+document.addEventListener("htmx:afterOnLoad", function (event) {
+    const kOlderLoadMoreButtonIdx = 1;
+
+    const buttons = document.getElementsByClassName("load-more-button");
+    if (buttons.length > 1) {
+        buttons[kOlderLoadMoreButtonIdx].remove();
+    }
+});
+
+document.addEventListener("no-more-users", function (event) {
+    const button = document.querySelector(".load-more-button");
+    button?.remove();
 });
