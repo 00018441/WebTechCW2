@@ -88,7 +88,7 @@ PostsController.get(Endpoint.Pages.kPosts, validateQueryParams(postsParamsSchema
                         publicUserInfoUrl: `${Endpoint.Api.kUserGet}/${post["user_id"]}`,
                     }),
                     description:
-                        post.description.length > 150 ? post.description.slice(0, 150) + "…" : post.description,
+                        post.description.length > 350 ? post.description.slice(0, 350) + "…" : post.description,
                     createdAgo: format(post["created_at"]),
                     postSettingsCount: post["post_settings_count"],
                 });
