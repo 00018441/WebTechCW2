@@ -123,3 +123,9 @@ Nevertheless, I think it turned out ok.
    are quite efficient as well thanks to clever algorithms used by PostgreSQL for indexing (last migration btw, I also hate ORM btw).
 
 6. Nice landing page. I am also quite proud of the overall design -- it suits the project idea.
+
+## A note about logging and why I chose codegen
+
+This whole story is inspired by one of the companies where I am currently working. We have much, much better logging and beautiful
+dashboards to monitor all metrics emitted by each of the microservices. So I decided to try to set up something like that on my own,
+and it works! And the reason why I chose HTMX is of course: `https://www.youtube.com/watch?v=x7v6SNIgJpE`
