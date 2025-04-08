@@ -7,6 +7,7 @@ various keybinds. Unfortunately due to time constraints I wan't able to implemen
 features I originally intended so users will have to share all settings in post descriptions for now).
 
 Here is the Elastic IP address of my AWS EC2 instance where the project is deployed: `52.55.129.8`
+Github Repo: `https://github.com/00018441/WebTechCW2`
 
 ## Project setup
 
