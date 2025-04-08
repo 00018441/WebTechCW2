@@ -10,13 +10,16 @@
 
 .homepage-title {
     color: #00ff00;
-    font-family: "Press Start 2P", monospace;
     font-size: 6em;
     margin-bottom: 20px;
     text-shadow:
         4px 4px #1b1b1b,
         8px 8px #333;
     letter-spacing: 0.15em;
+
+    @media (max-width: 840px) {
+        font-size: 4em;
+    }
 }
 
 .homepage-description {
