@@ -20,7 +20,9 @@ export class UsersService {
     }
 
     static async getUserByEmail(email) {
-        const { rows, rowCount } = await query(parameterize(sqlQueries.kSelectUser, { param: "email" }), [email]);
+        const { rows, rowCount } = await query(parameterize(sqlQueries.kSelectUserForProfile, { param: "email" }), [
+            email,
+        ]);
 
         if (rowCount === 0) {
             throw new BadRequestError(ErrorCode.kUserInvalidEmail);
@@ -30,7 +32,17 @@ export class UsersService {
     }
 
     static async getUserById(id) {
-        const { rows, rowCount } = await query(parameterize(sqlQueries.kSelectUser, { param: "id" }), [id]);
+        const { rows, rowCount } = await query(parameterize(sqlQueries.kSelectUserForProfile, { param: "id" }), [id]);
+
+        if (rowCount === 0) {
+            throw new BadRequestError(ErrorCode.kUserInvalidId);
+        }
+
+        return rows[0];
+    }
+
+    static async getPublicUserInfo(id) {
+        const { rows, rowCount } = await query(sqlQueries.kSelectUserForMortals, [id]);
 
         if (rowCount === 0) {
             throw new BadRequestError(ErrorCode.kUserInvalidId);

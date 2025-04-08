@@ -1,4 +1,4 @@
--- kSelectUser
+-- kSelectUserForProfile
 
 -- $1 - id
 

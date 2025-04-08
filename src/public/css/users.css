@@ -76,6 +76,7 @@
             word-break: break-word;
             padding: 5px 0;
             background: transparent;
+            z-index: 1;
         }
 
         .user-role.admin {
@@ -112,7 +113,6 @@
         top: 10px;
         right: 10px;
         padding: 6px 10px;
-        font-family: "Press Start 2P", monospace;
         font-size: 0.6em;
         background-color: #dc3545;
         color: #ffffff;

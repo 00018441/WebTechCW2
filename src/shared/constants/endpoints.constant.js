@@ -9,15 +9,13 @@ export class Endpoint {
         static kUsers = "/api/pages/users";
     };
 
-    static Minions = class {
-        static kStatusButtons = "/api/auth/minions/status-buttons";
-    };
-
     static Api = class {
         static kLogout = "/api/auth/logout";
         static kRegister = "/api/auth/register";
         static kLogin = "/api/auth/login";
         static kProfile = "/api/users/profile";
+        static kUserGet = "/api/users";
         static kUserDelete = "/api/users";
+        static kStatusButtons = "/api/auth/status-buttons";
     };
 }

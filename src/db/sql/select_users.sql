@@ -6,10 +6,11 @@
 
 SELECT
     users.id,
-    role,
-    email,
-    status,
-    username,
+    users.role,
+    users.email,
+    users.status,
+    users.username,
+    users.created_at,
     COALESCE(COUNT(posts.id), 0) AS posts_count
 FROM csconfig.users
 LEFT JOIN csconfig.posts

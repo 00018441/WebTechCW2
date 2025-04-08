@@ -67,7 +67,7 @@ AuthController.get(Endpoint.Api.kLogout, (_req, res) => {
     res.status(StatusCode.kOk).send();
 });
 
-AuthController.get(Endpoint.Minions.kStatusButtons, getUserFromToken, (_req, res) => {
+AuthController.get(Endpoint.Api.kStatusButtons, getUserFromToken, (_req, res) => {
     const isLoggedIn = !!res.locals.userId;
 
     if (isLoggedIn) {

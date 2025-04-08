@@ -1,0 +1,156 @@
+#user-info-tooltip {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    position: fixed;
+    background-color: #1b1b1b;
+    color: #ddd;
+    padding: 15px;
+    border: 2px solid #555;
+    border-radius: 12px;
+    box-shadow: 4px 4px #333;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+        opacity 0.2s ease-in-out,
+        visibility 0s linear 0.2s;
+    pointer-events: none;
+
+    *:not(.status-icon) {
+        background: transparent;
+    }
+}
+
+#user-info-tooltip.visible {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+#user-info-tooltip::before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border: 1px dashed #555;
+    border-radius: 6px;
+    background: transparent;
+}
+
+.tooltip-username {
+    color: #fff;
+    font-size: 1.2em;
+    margin-top: 0;
+    text-shadow: 1px 1px #000;
+    text-align: center;
+    padding-bottom: 8px;
+    border-bottom: 1px dotted #555;
+}
+
+.tooltip-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px dotted #555;
+}
+
+.status-text {
+    font-style: normal;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+}
+
+.status-text.newbie {
+    color: #6c757d;
+}
+
+.status-text.explorer {
+    color: #00bfff;
+}
+
+.status-text.expert {
+    color: #ffc107;
+}
+
+.tooltip-registered {
+    font-size: 0.7em;
+    text-align: center;
+}
+
+.status-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    font-size: 10px;
+    color: #fff;
+}
+
+.status-icon.newbie {
+    background-color: #6c757d;
+    animation: subtle-pulse 2s infinite;
+}
+
+.status-icon.explorer {
+    background-color: #00bfff;
+    animation: wave 1.75s infinite;
+}
+
+.status-icon.expert {
+    background-color: #ffc107;
+    animation: glow 3s infinite;
+}
+
+@keyframes subtle-pulse {
+    0% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.6;
+    }
+}
+
+@keyframes wave {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 191, 255, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 6px rgba(0, 191, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 191, 255, 0);
+    }
+}
+
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 5px rgba(255, 193, 7, 0.8);
+    }
+    50% {
+        box-shadow: 0 0 12px rgba(255, 193, 7, 1);
+    }
+    100% {
+        box-shadow: 0 0 5px rgba(255, 193, 7, 0.8);
+    }
+}
+
+.status-text.newbie {
+    color: #6c757d;
+}
+.status-text.explorer {
+    color: #00bfff;
+}
+.status-text.expert {
+    color: #ffc107;
+}

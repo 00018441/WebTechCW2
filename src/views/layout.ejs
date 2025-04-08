@@ -11,12 +11,14 @@
         <script src="/js/htmx.min.js"></script>
         <script src="/js/index.js"></script>
         <script src="/js/handlers.js"></script>
+        <script src="/js/tooltip.js"></script>
 
         <link rel="stylesheet" href="/css/index.css" />
         <link rel="stylesheet" href="/css/layout.css" />
         <link rel="stylesheet" href="/css/navbar.css" />
         <link rel="stylesheet" href="/css/auth.css" />
         <link rel="stylesheet" href="/css/users.css" />
+        <link rel="stylesheet" href="/css/tooltip.css" />
     </head>
     <body>
         <!-- navbar -->
@@ -48,18 +50,47 @@
         </div>
         <div
             id="auth-status-buttons-loader"
-            hx-get="/api/auth/minions/status-buttons"
+            hx-get="/api/auth/status-buttons"
             hx-trigger="load"
             hx-target="#auth-status-buttons"
         >
         </div>
         <!-- loaders -->
 
+        <span
+            hx-get="/api/users/6251e0f6-847f-4f9e-ad9f-78e66eb8ba83"
+            hx-trigger="mouseover"
+            hx-target="#user-info-tooltip"
+            hx-swap="innerHTML">
+            Hover me
+        </span>
+        <span
+            hx-get="/api/users/1e555ea1-a68a-412c-b6c7-7907687beb74"
+            hx-trigger="mouseover"
+            hx-target="#user-info-tooltip"
+            hx-swap="innerHTML">
+            Hover me
+        </span>
+
+        <!-- user info tooltip -->
+        <div id="user-info-tooltip" class="tooltip"></div>
+        <!-- user info tooltip -->
+
+        <!-- global diagnostic messages -->
         <div id="response-message-container"></div>
+        <!-- global diagnostic messages -->
 
         <div id="content">
             <%- body %>
         </div>
+
+        <span
+            hx-get="/api/users/5d51955b-ca47-4ca0-901a-416896a2a6a5"
+            hx-trigger="mouseover"
+            hx-target="#user-info-tooltip"
+            hx-swap="innerHTML">
+            Hover me
+        </span>
 
         <!-- statement -->
         <div id="statement">
