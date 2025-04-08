@@ -2,7 +2,7 @@ import { format } from "timeago.js";
 import Router from "express-promise-router";
 import { UsersService } from "./users.service.js";
 import { usersMinions } from "./minions/users-minions.js";
-import { parameterize, isEmpty } from "#shared/utils/index.js";
+import { parameterize, isEmpty, isUserAdmin } from "#shared/utils/index.js";
 import { sharedMinions } from "#shared/minions/shared-minions.js";
 import { validateQueryParams } from "#shared/validators/index.js";
 import { usersParamsSchema } from "./schemas/users-params.schema.js";
@@ -20,7 +20,7 @@ UsersController.get(Endpoint.Api.kProfile, getUserFromToken, async function (req
             publicUserInfoUrl: `${Endpoint.Api.kUserGet}/${user.id}`,
             username: user.username,
         });
-        if (isAdmin(user)) {
+        if (isUserAdmin(user)) {
             response += parameterize(usersMinions.kAdminUsersPageLink, { usersListUrl: Endpoint.Pages.kUsers });
         }
 
@@ -66,7 +66,7 @@ UsersController.get(
     validateQueryParams(usersParamsSchema),
     async function (req, res) {
         try {
-            const { page = 0, limit = 2 /*5*/, username = "" } = req.query;
+            const { page = 0, limit = 15, username = "" } = req.query;
             req.logger.info(`fetching users: page=${page}, limit=${limit}, username=${username}`);
 
             const users = await UsersService.getUsers(page, limit, username);
@@ -142,10 +142,6 @@ UsersController.delete(
         }
     },
 );
-
-function isAdmin(user) {
-    return user.role === "admin";
-}
 
 function isRepeatedRequest(page) {
     return page > 0;

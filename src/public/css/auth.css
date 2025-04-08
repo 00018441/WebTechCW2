@@ -1,3 +1,17 @@
+#login-form::before,
+#register-form::before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border: 1px dashed #555;
+    border-radius: 8px;
+    background: transparent;
+    pointer-events: none;
+}
+
 #register-form {
     background-color: #1b1b1b;
     padding: 30px;
@@ -5,7 +19,8 @@
     width: 100%;
     max-width: 400px;
     margin: 20px auto;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+    box-shadow: 4px 4px #333;
+    position: relative;
 
     label {
         color: #ffffff;
@@ -81,7 +96,8 @@
     width: 100%;
     max-width: 400px;
     margin: 20px auto;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+    box-shadow: 4px 4px #333;
+    position: relative;
 
     label {
         color: #ffffff;
@@ -138,4 +154,20 @@
     input:focus::placeholder {
         color: #00ff00;
     }
+}
+
+#login-form-title,
+#register-form-title {
+    color: #00ff00;
+    font-size: 2.5em;
+    text-shadow:
+        2px 2px #1b1b1b,
+        4px 4px #333;
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 40px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-bottom: 4px dotted #444;
+    padding-bottom: 20px;
 }

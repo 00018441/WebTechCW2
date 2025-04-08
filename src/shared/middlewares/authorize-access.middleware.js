@@ -1,26 +1,57 @@
+import { PostsService } from "#modules/posts/posts.service.js";
 import { UsersService } from "#modules/users/users.service.js";
-import { StatusCode, ErrorCode } from "#shared/constants/index.js";
+import { StatusCode, ErrorCode, Role, Constants } from "#shared/constants/index.js";
 import { sharedMinions } from "#shared/minions/shared-minions.js";
-import { parameterize } from "#shared/utils/index.js";
+import { isUserAdmin, parameterize } from "#shared/utils/index.js";
 
 export function authorizeAccess(...roles) {
-    return async function (_req, res, next) {
+    return async function (req, res, next) {
         try {
             res.locals.user = await UsersService.getUserById(res.locals.userId);
 
-            if (roles.includes("admin") && res.locals.user?.role == "admin") {
+            if (isUserAdmin(res.locals.user) && roles.includes(Role.kAdmin)) {
+                return next();
+            }
+
+            if (!res.locals.user.id) {
+                return sendUnauthorized(res);
+            }
+
+            const { postId, userId /*, TODO: maybe for later [commentId] */ } = req.params;
+            let entity = null;
+            let field;
+
+            try {
+                if (postId) {
+                    entity = await PostsService.getPostById(postId);
+                    field = Constants.kForeignUserId;
+                } else if (userId === res.locals.userId) {
+                    entity = res.locals.user;
+                    field = Constants.kUserId;
+                }
+            } catch (err) {
+                req.logger.info(
+                    `unauthorized access, user_id (cookie): ${res.locals.userId}, postId: ${postId}, userId (param): ${userId}`,
+                );
+            }
+
+            if (entity && roles.includes(Role.kMortal) && entity[field] === res.locals.user.id) {
                 next();
             } else {
-                res.status(StatusCode.kOk).send(
-                    parameterize(sharedMinions.kErrorMessage, { message: "You are not allowed to view this resource" }),
-                );
+                sendUnauthorized(res);
             }
         } catch (err) {
             if (err.message === ErrorCode.kUserInvalidId) {
-                res.status(StatusCode.kOk).send(parameterize(sharedMinions.kErrorMessage, { message: "Not Found" }));
+                sendUnauthorized(res);
+            } else {
+                next(err);
             }
-
-            next(err);
         }
     };
+}
+
+function sendUnauthorized(res) {
+    res.status(StatusCode.kOk).send(
+        parameterize(sharedMinions.kErrorMessage, { message: "You are not allowed to view this resource" }),
+    );
 }

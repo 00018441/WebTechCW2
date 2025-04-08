@@ -1,0 +1,107 @@
+#create-post-form-title {
+    color: #00ff00;
+    font-size: 2.5em;
+    text-shadow:
+        2px 2px #1b1b1b,
+        4px 4px #333;
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 40px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-bottom: 4px dotted #444;
+    padding-bottom: 20px;
+}
+
+#create-post-form::before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border: 1px dashed #555;
+    border-radius: 8px;
+    background: transparent;
+    pointer-events: none;
+}
+
+#create-post-form {
+    background-color: #1b1b1b;
+    padding: 30px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    box-shadow: 4px 4px #333;
+    position: relative;
+
+    @media (min-width: 768px) {
+        min-width: 700px;
+    }
+
+    label {
+        color: #ffffff;
+        margin-bottom: 10px;
+        display: block;
+        font-weight: bold;
+        background: transparent;
+    }
+
+    textarea,
+    input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        border: 2px solid #444;
+        background-color: #333;
+        color: #ddd;
+        font-size: 0.8em;
+        transition: border-color 0.3s ease;
+    }
+
+    textarea {
+        line-height: 18px;
+        letter-spacing: 2px;
+    }
+
+    textarea:focus,
+    input:focus {
+        border-color: #00ff00;
+        outline: none;
+    }
+
+    textarea::placeholder,
+    input::placeholder {
+        color: #bbb;
+    }
+
+    textarea:focus::placeholder,
+    input:focus::placeholder {
+        color: #00ff00;
+    }
+
+    button[type="submit"] {
+        width: 100%;
+        padding: 14px;
+        background-color: #00ff00;
+        color: #1b1b1b;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #00cc00;
+        transform: scale(1.05);
+    }
+
+    button[type="submit"]:active {
+        background-color: #009900;
+        transform: scale(0.98);
+    }
+}

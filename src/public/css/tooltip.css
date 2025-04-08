@@ -37,8 +37,9 @@
     right: 5px;
     bottom: 5px;
     border: 1px dashed #555;
-    border-radius: 6px;
+    border-radius: 8px;
     background: transparent;
+    pointer-events: none;
 }
 
 .tooltip-username {

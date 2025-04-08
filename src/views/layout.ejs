@@ -20,6 +20,7 @@
         <link rel="stylesheet" href="/css/users.css" />
         <link rel="stylesheet" href="/css/tooltip.css" />
         <link rel="stylesheet" href="/css/home.css" />
+        <link rel="stylesheet" href="/css/posts.css" />
     </head>
     <body>
         <!-- navbar -->
@@ -29,7 +30,14 @@
                 <ul class="nav" id="nav-desktop">
                     <li>Company</li>
                     <li>Contacts</li>
-                    <li>FAQ</li>
+                    <li
+                        id="posts-create-form-link"
+                        hx-get="/api/forms/posts"
+                        hx-target="#content"
+                        hx-swap="innerHTML"
+                    >
+                        New Post
+                    </li>
                     <li id="users-page-link"></li>
                     <li id="auth-container">
                         <div id="nav-username"></div>

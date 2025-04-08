@@ -33,6 +33,10 @@ document.addEventListener("htmx:afterRequest", function (event) {
         return history.pushState(null, "", "/users");
     }
 
+    if (event.detail.requestConfig.path.includes("forms/posts")) {
+        return history.pushState(null, "", "/new-post");
+    }
+
     history.pushState(null, "", "/");
 });
 

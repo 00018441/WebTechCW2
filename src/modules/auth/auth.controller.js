@@ -1,12 +1,12 @@
 import Router from "express-promise-router";
 import { AuthService } from "./auth.service.js";
 import { authMinions } from "./minions/auth-minions.js";
-import { validateRequestBody } from "#shared/validators/index.js";
-import { registerSchema, loginSchema } from "./schemas/index.js";
-import { Endpoint, StatusCode, ErrorCode } from "#shared/constants/index.js";
 import { getUserFromToken } from "#shared/middlewares/index.js";
-import { parameterize } from "#shared/utils/index.js";
+import { registerSchema, loginSchema } from "./schemas/index.js";
 import { sharedMinions } from "#shared/minions/shared-minions.js";
+import { validateRequestBody } from "#shared/validators/index.js";
+import { Endpoint, StatusCode, ErrorCode } from "#shared/constants/index.js";
+import { parameterize, signSuccessMessageCookie } from "#shared/utils/index.js";
 
 export const AuthController = Router();
 
@@ -17,7 +17,7 @@ AuthController.post(Endpoint.Api.kRegister, validateRequestBody(registerSchema),
 
         signTokenCookie(res, token);
 
-        res.setHeader("HX-Redirect", "/");
+        res.setHeader("HX-Redirect", Endpoint.Pages.kHome);
         signSuccessMessageCookie(
             res,
             parameterize(sharedMinions.kSuccessMessage, { message: "Registration successful!" }),
@@ -44,7 +44,7 @@ AuthController.post(Endpoint.Api.kLogin, validateRequestBody(loginSchema), async
 
         signTokenCookie(res, token);
 
-        res.setHeader("HX-Redirect", "/");
+        res.setHeader("HX-Redirect", Endpoint.Pages.kHome);
         signSuccessMessageCookie(res, parameterize(sharedMinions.kSuccessMessage, { message: "Login successful!" }));
         res.status(StatusCode.kCreated).send();
     } catch (err) {
@@ -62,7 +62,7 @@ AuthController.post(Endpoint.Api.kLogin, validateRequestBody(loginSchema), async
 
 AuthController.get(Endpoint.Api.kLogout, (_req, res) => {
     res.clearCookie("accessToken");
-    res.setHeader("HX-Redirect", "/");
+    res.setHeader("HX-Redirect", Endpoint.Pages.kHome);
 
     res.status(StatusCode.kOk).send();
 });
@@ -112,13 +112,5 @@ function signTokenCookie(res, token) {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         maxAge: Number(process.env.AUTH_TOKEN_EXPIRES_IN_MS),
-    });
-}
-
-function signSuccessMessageCookie(res, message) {
-    res.clearCookie("successMessage");
-    res.cookie("successMessage", message, {
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 15000,
     });
 }

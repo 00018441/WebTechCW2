@@ -1,6 +1,6 @@
 -- kSelectUserForProfile
 
--- $1 - id
+-- $1 - id | email
 
 SELECT
     id,

@@ -1,6 +1,6 @@
 -- kSelectUserForMortals
 
--- $1 - id
+-- $1 - id | email
 
 SELECT
     username,
