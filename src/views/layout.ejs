@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="/css/tooltip.css" />
         <link rel="stylesheet" href="/css/home.css" />
         <link rel="stylesheet" href="/css/posts.css" />
+        <link rel="stylesheet" href="/css/posts_list_page.css" />
     </head>
     <body>
         <!-- navbar -->
@@ -28,8 +29,14 @@
             <div id="nav-wrapper">
                 <div id="logo" hx-get="/" hx-target="body">CSConfig</div>
                 <ul class="nav" id="nav-desktop">
-                    <li>Company</li>
-                    <li>Contacts</li>
+                    <li
+                        id="posts-page-link"
+                        hx-get="/api/pages/posts"
+                        hx-target="#content"
+                        hx-swap="innerHTML"
+                    >
+                        Posts
+                    </li>
                     <li
                         id="posts-create-form-link"
                         hx-get="/api/forms/posts"

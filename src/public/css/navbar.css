@@ -59,8 +59,10 @@ nav {
     display: none;
 }
 
-#users-page-link {
+#users-page-link,
+#users-page-link * {
     cursor: pointer;
+    background: transparent;
 }
 
 #auth-container {

@@ -8,8 +8,6 @@ document.addEventListener("htmx:afterSwap", (event) => {
 
     let currentTarget;
 
-    console.log(usernameDivs);
-
     usernameDivs.forEach((div) => {
         div.addEventListener("mouseover", (event) => {
             currentTarget = event.currentTarget;

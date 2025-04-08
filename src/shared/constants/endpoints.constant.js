@@ -8,6 +8,7 @@ export class Endpoint {
     static Pages = class {
         static kHome = "/";
         static kUsers = "/api/pages/users";
+        static kPosts = "/api/pages/posts";
     };
 
     static Api = class {

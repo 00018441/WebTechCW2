@@ -37,6 +37,10 @@ document.addEventListener("htmx:afterRequest", function (event) {
         return history.pushState(null, "", "/new-post");
     }
 
+    if (event.detail.requestConfig.path.includes("pages/posts")) {
+        return history.pushState(null, "", "/posts");
+    }
+
     history.pushState(null, "", "/");
 });
 
@@ -50,6 +54,11 @@ document.addEventListener("htmx:afterOnLoad", function (event) {
 });
 
 document.addEventListener("no-more-users", function (event) {
+    const button = document.querySelector(".load-more-button");
+    button?.remove();
+});
+
+document.addEventListener("no-more-posts", function (event) {
     const button = document.querySelector(".load-more-button");
     button?.remove();
 });

@@ -2,12 +2,12 @@ import { format } from "timeago.js";
 import Router from "express-promise-router";
 import { UsersService } from "./users.service.js";
 import { usersMinions } from "./minions/users-minions.js";
-import { parameterize, isEmpty, isUserAdmin } from "#shared/utils/index.js";
 import { sharedMinions } from "#shared/minions/shared-minions.js";
 import { validateQueryParams } from "#shared/validators/index.js";
 import { usersParamsSchema } from "./schemas/users-params.schema.js";
 import { getUserFromToken, authorizeAccess } from "#shared/middlewares/index.js";
 import { StatusCode, Endpoint, ErrorCode, Role } from "#shared/constants/index.js";
+import { parameterize, isEmpty, isUserAdmin, isRepeatedRequest } from "#shared/utils/index.js";
 
 export const UsersController = Router();
 
@@ -86,6 +86,8 @@ UsersController.get(
                 })
                 .join("");
 
+            // emit an event if no posts left so
+            // frontend can hide the load more button
             const loadMoreButton =
                 users.length === limit
                     ? parameterize(usersMinions.kLoadMoreButton, {
@@ -142,7 +144,3 @@ UsersController.delete(
         }
     },
 );
-
-function isRepeatedRequest(page) {
-    return page > 0;
-}

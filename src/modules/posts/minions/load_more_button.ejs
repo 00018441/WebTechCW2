@@ -1,0 +1,10 @@
+<button
+    class="load-more-button"
+    hx-get="{{postsListUrl}}?page={{page}}&limit={{limit}}&title={{title}}&description={{description}}"
+    hx-target="#posts-list-container"
+    hx-swap="beforeend"
+    hx-trigger="click"
+    hx-boost="true"
+>
+    Load More
+</button>
