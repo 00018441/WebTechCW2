@@ -12,6 +12,7 @@ SELECT
     users.status,
     posts.title,
     posts.description,
+    posts.updated_at,
     posts.created_at,
     COALESCE(COUNT(post_settings.setting_id), 0) AS post_settings_count
 FROM csconfig.posts

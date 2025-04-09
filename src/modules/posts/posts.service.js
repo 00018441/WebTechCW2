@@ -35,4 +35,12 @@ export class PostsService {
 
         return rowCount;
     }
+
+    static async updatePost(postDto) {
+        const { rowCount } = await query(sqlQueries.kUpdatePost, [postDto.postId, postDto.title, postDto.description]);
+
+        if (rowCount === 0) {
+            throw new BadRequestError(ErrorCode.kPostInvalidId);
+        }
+    }
 }

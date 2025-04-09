@@ -35,6 +35,10 @@ document.addEventListener("htmx:afterRequest", function (event) {
         return history.pushState(null, "", "/users");
     }
 
+    if (path.includes("forms/posts/")) {
+        return history.pushState(null, "", "/update-post");
+    }
+
     if (path.includes("forms/posts")) {
         return history.pushState(null, "", "/new-post");
     }

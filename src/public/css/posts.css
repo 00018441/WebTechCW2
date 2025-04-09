@@ -1,4 +1,4 @@
-#create-post-form-title {
+#create-update-post-form-title {
     color: #00ff00;
     font-size: 2.5em;
     text-shadow:
@@ -13,7 +13,7 @@
     padding-bottom: 20px;
 }
 
-#create-post-form::before {
+#create-update-post-form::before {
     content: "";
     position: absolute;
     top: 5px;
@@ -26,7 +26,7 @@
     pointer-events: none;
 }
 
-#create-post-form {
+#create-update-post-form {
     background-color: #1b1b1b;
     padding: 30px;
     border-radius: 10px;

@@ -1,4 +1,9 @@
 <div class="post-actions">
-    <button class="edit-button" hx-put="{{postEditUrl}}">Edit</button>
+    <button
+        class="edit-button"
+        hx-get="{{postEditUrl}}"
+        hx-target="#content"
+        hx-swap="innerHTML"
+    >Edit</button>
     <button class="delete-button" hx-delete="{{postDeleteUrl}}">Delete</button>
 </div>

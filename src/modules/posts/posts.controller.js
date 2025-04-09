@@ -4,11 +4,11 @@ import { PostsService } from "./posts.service.js";
 import { postsMinions } from "./minions/posts-minions.js";
 import { sharedMinions } from "#shared/minions/shared-minions.js";
 import { parameterize } from "#shared/utils/parameterize-ejs.util.js";
-import { createPostSchema, postsParamsSchema } from "./schemas/index.js";
 import { authorizeAccess, getUserIdFromToken } from "#shared/middlewares/index.js";
-import { StatusCode, Endpoint, Role, ErrorCode, AuthorizationMode } from "#shared/constants/index.js";
 import { validateRequestBody, validateQueryParams } from "#shared/validators/index.js";
+import { createPostSchema, postsParamsSchema, updatePostSchema } from "./schemas/index.js";
 import { signSuccessMessageCookie, isRepeatedRequest, isEmpty } from "#shared/utils/index.js";
+import { StatusCode, Endpoint, Role, ErrorCode, AuthorizationMode } from "#shared/constants/index.js";
 
 export const PostsController = Router();
 
@@ -24,7 +24,14 @@ PostsController.get(Endpoint.Forms.kNewPost, getUserIdFromToken, async function 
         }
 
         res.status(StatusCode.kOk).send(
-            parameterize(postsMinions.kCreatePostForm, { createPostUrl: Endpoint.Api.kPosts }),
+            parameterize(postsMinions.kCreateUpdatePostForm, {
+                method: "post",
+                titleAction: "Create New",
+                buttonAction: "Create",
+                titleValue: "",
+                descriptionValue: "",
+                createUpdatePostUrl: Endpoint.Api.kPosts,
+            }),
         );
     } catch (err) {
         throw err;
@@ -90,7 +97,8 @@ PostsController.get(Endpoint.Pages.kPosts, validateQueryParams(postsParamsSchema
                     }),
                     description:
                         post.description.length > 350 ? post.description.slice(0, 350) + "…" : post.description,
-                    createdAgo: format(new Date(post["created_at"]), "en_US"),
+                    updatedAgo: format(post["updated_at"], "en_US"),
+                    createdAgo: format(post["created_at"], "en_US"),
                     postSettingsCount: post["post_settings_count"],
                 });
             })
@@ -141,6 +149,7 @@ PostsController.get(
             res.status(StatusCode.kOk).send(
                 parameterize(postsMinions.kPostDetailPage, {
                     title: post.title,
+                    updatedAgo: format(post["updated_at"], "en_US"),
                     createdAgo: format(post["created_at"], "en_US"),
                     description: post.description,
                     author: parameterize(postsMinions.kUsernameWithTooltip, {
@@ -150,7 +159,7 @@ PostsController.get(
                     }),
                     editDeleteButtons: res.locals.isAuthorized
                         ? parameterize(postsMinions.kPostEditDeleteButtons, {
-                              postEditUrl: `${Endpoint.Api.kPosts}/${post.id}`,
+                              postEditUrl: `${Endpoint.Forms.kPostUpdate}/${post.id}`,
                               postDeleteUrl: `${Endpoint.Api.kPosts}/${post.id}`,
                           })
                         : "",
@@ -184,6 +193,73 @@ PostsController.delete(
                 req.logger.info(`failed to delete post, invalid id`);
                 res.status(StatusCode.kOk).send(
                     parameterize(sharedMinions.kErrorMessage, { message: "Invalid post Id" }),
+                );
+            } else {
+                throw err;
+            }
+        }
+    },
+);
+
+PostsController.get(
+    `${Endpoint.Forms.kPostUpdate}/:postId`,
+    getUserIdFromToken,
+    authorizeAccess(AuthorizationMode.kHard, Role.kMortal, Role.kAdmin),
+    async function (req, res) {
+        try {
+            const post = res.locals.entity;
+
+            res.status(StatusCode.kOk).send(
+                parameterize(postsMinions.kCreateUpdatePostForm, {
+                    method: "patch",
+                    titleAction: "Update",
+                    buttonAction: "Update",
+                    titleValue: post?.title,
+                    descriptionValue: post?.description,
+                    createUpdatePostUrl: `${Endpoint.Api.kPosts}/${post?.id}`,
+                }),
+            );
+        } catch (err) {
+            if (err.message === ErrorCode.kPostInvalidId) {
+                req.logger.info(`failed to update post, invalid id`);
+                res.status(StatusCode.kOk).send(
+                    parameterize(sharedMinions.kErrorMessage, {
+                        message: "Something went wrong. The post Id is likely invalid",
+                    }),
+                );
+            } else {
+                throw err;
+            }
+        }
+    },
+);
+
+PostsController.patch(
+    `${Endpoint.Api.kPostUpdate}/:postId`,
+    validateRequestBody(updatePostSchema),
+    getUserIdFromToken,
+    authorizeAccess(AuthorizationMode.kHard, Role.kMortal, Role.kAdmin),
+    async function (req, res) {
+        try {
+            const { postId } = req.params;
+            const { title, description } = req.body;
+            req.logger.info(`post update dto: postId (${postId}), title (${title}), description (${description})`);
+
+            await PostsService.updatePost({ postId, title, description });
+
+            res.setHeader("HX-Redirect", Endpoint.Pages.kHome);
+            signSuccessMessageCookie(
+                res,
+                parameterize(sharedMinions.kSuccessMessage, { message: "Post updated successfully!" }),
+            );
+            res.status(StatusCode.kNoContent).send();
+        } catch (err) {
+            if (err.message === ErrorCode.kPostInvalidId) {
+                req.logger.info(`failed to update post, invalid id`);
+                res.status(StatusCode.kOk).send(
+                    parameterize(sharedMinions.kErrorMessage, {
+                        message: "Something went wrong. The post Id is likely invalid",
+                    }),
                 );
             } else {
                 throw err;

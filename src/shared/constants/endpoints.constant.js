@@ -3,6 +3,7 @@ export class Endpoint {
         static kRegister = "/api/auth/forms/register";
         static kLogin = "/api/auth/forms/login";
         static kNewPost = "/api/forms/posts";
+        static kPostUpdate = "/api/forms/posts";
     };
 
     static Pages = class {
@@ -24,5 +25,6 @@ export class Endpoint {
 
         static kPosts = "/api/posts";
         static kPostDelete = "/api/posts";
+        static kPostUpdate = "/api/posts";
     };
 }

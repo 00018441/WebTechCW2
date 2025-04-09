@@ -1,0 +1,29 @@
+<h1 id="create-update-post-form-title">{{titleAction}} Post</h1>
+
+<form
+    id="create-update-post-form"
+    hx-{{method}}={{createUpdatePostUrl}}
+    hx-target="#response-message-container"
+>
+    <label for="post-title">Title:</label>
+    <input
+        type="text"
+        id="post-title"
+        name="title"
+        autocomplete="off"
+        placeholder="Enter post title"
+        value="{{titleValue}}"
+        required
+    >
+
+    <label for="post-description">Description:</label>
+    <textarea
+        id="post-description"
+        name="description"
+        placeholder="Briefly describe your config"
+        rows="15"
+        required
+    >{{descriptionValue}}</textarea>
+
+    <button type="submit" class="submit-button">{{buttonAction}} Post</button>
+</form>
