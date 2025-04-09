@@ -1,7 +1,11 @@
 import { isLetter } from "./is-letter.util.js";
 
+function isUpperCase(letter) {
+    return letter?.length === 1 && letter >= "A" && letter <= "Z";
+}
+
 // WARN: ignores non-letter characters
-export function convertToCamelCase(value) {
+export function convertToSnakeCase(value = "") {
     const letters = [];
 
     for (let i = 0; i < value.length; ++i) {
@@ -9,8 +13,8 @@ export function convertToCamelCase(value) {
             continue;
         }
 
-        if (value[i - 1] === "_") {
-            letters.push(value[i].toUpperCase());
+        if (isUpperCase(value[i])) {
+            letters.push(`_${value[i].toLowerCase()}`);
         } else {
             letters.push(value[i]);
         }
