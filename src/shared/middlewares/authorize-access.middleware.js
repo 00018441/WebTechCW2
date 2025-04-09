@@ -59,9 +59,8 @@ export function authorizeAccess(mode, ...roles) {
                 return sendUnauthorized(mode, res, next);
             }
 
-            res.locals.entity = entity;
-
             if (roles.includes(Role.kMortal) && entity[field] === res.locals.user.id) {
+                res.locals.entity = entity;
                 res.locals.isAuthorized = true;
                 next();
             } else {
