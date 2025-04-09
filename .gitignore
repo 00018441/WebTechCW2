@@ -8,3 +8,5 @@ users-minions.js
 posts-minions.js
 shared-minions.js
 sql-queries.js
+
+.DS_Store
