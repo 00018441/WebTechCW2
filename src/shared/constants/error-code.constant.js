@@ -4,4 +4,5 @@ export class ErrorCode {
     static kUserInvalidPassword = "user/invalid_password";
     static kUserInvalidId = "user/invalid_id";
     static kPostInvalidId = "post/invalid_id";
+    static kMultipleParams = "auth/multiple_params";
 }
