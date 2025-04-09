@@ -207,7 +207,13 @@ PostsController.get(
     authorizeAccess(AuthorizationMode.kHard, Role.kMortal, Role.kAdmin),
     async function (req, res) {
         try {
-            const post = res.locals.entity;
+            let post;
+            if (res.locals.entity) {
+                post = res.locals.entity;
+            } else {
+                post = await PostsService.getPostById(req.params.postId);
+            }
+
             req.logger.info(
                 `post: ${JSON.stringify(post)}, postId: ${req.params.postId}, isAuthorized: ${res.locals.isAuthorized}`,
             );
