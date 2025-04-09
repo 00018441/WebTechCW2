@@ -11,7 +11,8 @@ DROP TABLE IF EXISTS csconfig.post_settings CASCADE;
 CREATE TABLE IF NOT EXISTS csconfig.post_settings (
     setting_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     post_id UUID NOT NULL REFERENCES csconfig.posts(id) ON DELETE CASCADE,
-    category_id UUID REFERENCES csconfig.setting_categories(id) ON DELETE SET NULL,
+    user_id UUID REFERENCES csconfig.users(id) ON DELETE SET NULL,
+    category_id UUID NOT NULL REFERENCES csconfig.setting_categories(id) ON DELETE CASCADE,
     key TEXT NOT NULL,
     value TEXT NOT NULL,
     value_type value_type NOT NULL DEFAULT 'text',
