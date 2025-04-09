@@ -55,8 +55,6 @@ export function authorizeAccess(mode, ...roles) {
                 );
             }
 
-            req.logger.debug(`entity ${JSON.stringify(entity)}, field ${field}`);
-
             if (!entity || !res.locals.user?.id) {
                 return sendUnauthorized(mode, res, next);
             }

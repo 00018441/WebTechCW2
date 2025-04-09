@@ -208,6 +208,9 @@ PostsController.get(
     async function (req, res) {
         try {
             const post = res.locals.entity;
+            req.logger.info(
+                `post: ${JSON.stringify(post)}, postId: ${req.params.postId}, isAuthorized: ${res.locals.isAuthorized}`,
+            );
 
             res.status(StatusCode.kOk).send(
                 parameterize(postsMinions.kCreateUpdatePostForm, {
