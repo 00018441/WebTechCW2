@@ -1,7 +1,16 @@
 <div class="post-card">
+    <button
+        class="view-post-button"
+        hx-get="{{viewPostUrl}}"
+        hx-target="#content"
+        hx-swap="innerHTML"
+    >
+        View
+    </button>
+
     <div class="post-info-row">
         <div class="post-info-label">Title:</div>
-        {{title}}
+        <div class="post-info-value">{{title}}</div>
     </div>
     <div class="post-info-row">
         <div class="post-info-label">Author:</div>

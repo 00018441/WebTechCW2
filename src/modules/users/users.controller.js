@@ -5,13 +5,13 @@ import { usersMinions } from "./minions/users-minions.js";
 import { sharedMinions } from "#shared/minions/shared-minions.js";
 import { validateQueryParams } from "#shared/validators/index.js";
 import { usersParamsSchema } from "./schemas/users-params.schema.js";
-import { getUserFromToken, authorizeAccess } from "#shared/middlewares/index.js";
-import { StatusCode, Endpoint, ErrorCode, Role } from "#shared/constants/index.js";
+import { getUserIdFromToken, authorizeAccess } from "#shared/middlewares/index.js";
+import { StatusCode, Endpoint, ErrorCode, Role, AuthorizationMode } from "#shared/constants/index.js";
 import { parameterize, isEmpty, isUserAdmin, isRepeatedRequest } from "#shared/utils/index.js";
 
 export const UsersController = Router();
 
-UsersController.get(Endpoint.Api.kProfile, getUserFromToken, async function (req, res) {
+UsersController.get(Endpoint.Api.kProfile, getUserIdFromToken, async function (req, res) {
     try {
         const user = await UsersService.getUserById(res.locals.userId);
         req.logger.info(`fetched user ${res.locals.userId}: ${JSON.stringify(user)}`);
@@ -61,8 +61,8 @@ UsersController.get(`${Endpoint.Api.kUserGet}/:userId`, async function (req, res
 
 UsersController.get(
     Endpoint.Pages.kUsers,
-    getUserFromToken,
-    authorizeAccess(Role.kAdmin),
+    getUserIdFromToken,
+    authorizeAccess(AuthorizationMode.kHard, Role.kAdmin),
     validateQueryParams(usersParamsSchema),
     async function (req, res) {
         try {
@@ -123,15 +123,15 @@ UsersController.get(
 
 UsersController.delete(
     `${Endpoint.Api.kUserDelete}/:userId`,
-    getUserFromToken,
-    authorizeAccess(Role.kAdmin),
+    getUserIdFromToken,
+    authorizeAccess(AuthorizationMode.kHard, Role.kAdmin),
     async function (req, res) {
         try {
             const { userId } = req.params;
             await UsersService.deleteUser(userId);
             req.logger.info(`deleted user ${userId}`);
 
-            res.status(StatusCode.kOk).send();
+            res.status(StatusCode.kNoContent).send();
         } catch (err) {
             if (err.message === ErrorCode.kUserInvalidId) {
                 req.logger.info(`failed to delete user, invalid id`);

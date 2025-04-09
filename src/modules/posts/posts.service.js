@@ -26,13 +26,13 @@ export class PostsService {
         return (await query(sqlQueries.kSelectPosts, [`%${title}%`, `%${description}%`, page * limit, limit])).rows;
     }
 
-    // static async deleteUser(id) {
-    //     const { rowCount } = await query(sqlQueries.kDeleteUser, [id]);
-    //
-    //     if (rowCount === 0) {
-    //         throw new BadRequestError(ErrorCode.kUserInvalidId);
-    //     }
-    //
-    //     return rowCount;
-    // }
+    static async deletePost(id) {
+        const { rowCount } = await query(sqlQueries.kDeletePost, [id]);
+
+        if (rowCount === 0) {
+            throw new BadRequestError(ErrorCode.kPostInvalidId);
+        }
+
+        return rowCount;
+    }
 }

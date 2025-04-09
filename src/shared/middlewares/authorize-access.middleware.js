@@ -1,17 +1,18 @@
+import { BadRequestError } from "#shared/errors/index.js";
 import { PostsService } from "#modules/posts/posts.service.js";
 import { UsersService } from "#modules/users/users.service.js";
-import { StatusCode, ErrorCode, Role, Constants } from "#shared/constants/index.js";
-import { BadRequestError } from "#shared/errors/index.js";
 import { sharedMinions } from "#shared/minions/shared-minions.js";
-import { convertToSnakeCase } from "#shared/utils/convert-to-snake-case.util";
-import { isUserAdmin, parameterize } from "#shared/utils/index.js";
+import { StatusCode, AuthorizationMode, ErrorCode, Role, Constants } from "#shared/constants/index.js";
+import { isUserAdmin, parameterize, convertToSnakeCase } from "#shared/utils/index.js";
 
-export function authorizeAccess(...roles) {
+export function authorizeAccess(mode, ...roles) {
     return async function (req, res, next) {
         try {
             res.locals.user = await UsersService.getUserById(res.locals.userId);
+            res.locals.isAuthorized = false;
 
             if (isUserAdmin(res.locals.user) && roles.includes(Role.kAdmin)) {
+                res.locals.isAuthorized = true;
                 return next();
             }
 
@@ -49,24 +50,30 @@ export function authorizeAccess(...roles) {
                      postId: ${postId},
                      userId (param): ${userId},
                      commentId: ${commentId},
-                     postSettingId: ${postSettingId}`,
+                     postSettingId: ${postSettingId},
+                     error: ${err.message}`,
                 );
             }
 
+            req.logger.debug(`entity ${JSON.stringify(entity)}, field ${field}`);
+
             if (!entity || !res.locals.user?.id) {
-                return sendUnauthorized(res);
+                return sendUnauthorized(mode, res, next);
             }
 
             if (roles.includes(Role.kMortal) && entity[field] === res.locals.user.id) {
+                res.locals.isAuthorized = true;
                 next();
             } else {
-                sendUnauthorized(res);
+                sendUnauthorized(mode, res, next);
             }
         } catch (err) {
             if ([ErrorCode.kUserInvalidId, ErrorCode.kPostInvalidId].includes(err.message)) {
-                parameterize(sharedMinions.kErrorMessage, {
-                    message: "Something went wrong. The request is likely malformed.",
-                });
+                res.status(StatusCode.kOk).send(
+                    parameterize(sharedMinions.kErrorMessage, {
+                        message: "Something went wrong. The request is likely malformed.",
+                    }),
+                );
             } else {
                 next(err);
             }
@@ -74,7 +81,11 @@ export function authorizeAccess(...roles) {
     };
 }
 
-function sendUnauthorized(res) {
+function sendUnauthorized(mode, res, next) {
+    if (mode === AuthorizationMode.kSoft) {
+        return next();
+    }
+
     res.status(StatusCode.kOk).send(
         parameterize(sharedMinions.kErrorMessage, { message: "You are not allowed to view this resource" }),
     );

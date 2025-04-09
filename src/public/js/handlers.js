@@ -21,23 +21,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // client side routing, pretty hard to handle with htmx
 document.addEventListener("htmx:afterRequest", function (event) {
-    if (event.detail.requestConfig.path.includes("forms/register")) {
+    const path = event.detail.requestConfig.path;
+
+    if (path.includes("forms/register")) {
         return history.pushState(null, "", "/register");
     }
 
-    if (event.detail.requestConfig.path.includes("forms/login")) {
+    if (path.includes("forms/login")) {
         return history.pushState(null, "", "/login");
     }
 
-    if (event.detail.requestConfig.path.includes("pages/users")) {
+    if (path.includes("pages/users")) {
         return history.pushState(null, "", "/users");
     }
 
-    if (event.detail.requestConfig.path.includes("forms/posts")) {
+    if (path.includes("forms/posts")) {
         return history.pushState(null, "", "/new-post");
     }
 
-    if (event.detail.requestConfig.path.includes("pages/posts")) {
+    if (path.includes("pages/posts/")) {
+        return history.pushState(null, "", `/posts/${path.slice(path.lastIndexOf("/") + 1)}`);
+    }
+
+    if (path.includes("pages/posts")) {
         return history.pushState(null, "", "/posts");
     }
 

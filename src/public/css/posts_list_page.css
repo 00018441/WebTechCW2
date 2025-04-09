@@ -92,6 +92,34 @@
         .expert {
             color: #ffc107;
         }
+
+        .view-post-button {
+            margin: 5px 5px 0px 0px;
+            border-bottom: 1px dotted #555;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 7px 12px;
+            font-size: 0.7em;
+            background-color: #486fd4;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition:
+                background-color 0.3s ease,
+                transform 0.3s ease;
+        }
+
+        .view-post-button:hover {
+            background-color: #759bff;
+            transform: scale(1.08);
+        }
+
+        .view-post-button:active {
+            background-color: #759bee;
+            transform: scale(0.95);
+        }
     }
 }
 

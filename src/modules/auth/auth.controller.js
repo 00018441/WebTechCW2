@@ -1,7 +1,7 @@
 import Router from "express-promise-router";
 import { AuthService } from "./auth.service.js";
 import { authMinions } from "./minions/auth-minions.js";
-import { getUserFromToken } from "#shared/middlewares/index.js";
+import { getUserIdFromToken } from "#shared/middlewares/index.js";
 import { registerSchema, loginSchema } from "./schemas/index.js";
 import { sharedMinions } from "#shared/minions/shared-minions.js";
 import { validateRequestBody } from "#shared/validators/index.js";
@@ -67,7 +67,7 @@ AuthController.get(Endpoint.Api.kLogout, (_req, res) => {
     res.status(StatusCode.kOk).send();
 });
 
-AuthController.get(Endpoint.Api.kStatusButtons, getUserFromToken, (_req, res) => {
+AuthController.get(Endpoint.Api.kStatusButtons, getUserIdFromToken, (_req, res) => {
     const isLoggedIn = !!res.locals.userId;
 
     if (isLoggedIn) {

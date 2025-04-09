@@ -1,0 +1,24 @@
+<div class="post-detail-container">
+    <h1 id="post-detail-title">{{title}}</h1>
+
+    <div class="post-meta-container">
+        <div class="post-meta">
+            <div class="post-detail-row">
+                <div class="post-detail-label">Created:</div>
+                <div class="post-detail-value">{{createdAgo}}</div>
+            </div>
+            <div class="post-detail-row">
+                <div class="post-detail-label">Author:</div>
+                {{author}}
+            </div>
+        </div>
+        {{editDeleteButtons}}
+    </div>
+
+    <div class="post-detail-description">
+        <h3 class="post-detail-description-heading">Description:</h2>
+        <p class="post-detail-description-content">{{description}}</p>
+    </div>
+
+    <div id="post-settings-container">{{postSettingsCount}} Settings</div>
+</div>

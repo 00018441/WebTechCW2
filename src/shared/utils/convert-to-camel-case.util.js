@@ -1,6 +1,7 @@
 import { isLetter } from "./is-letter.util.js";
 
 // WARN: ignores non-letter characters
+// WARN: capitalizes the first letter
 export function convertToCamelCase(value) {
     const letters = [];
 
@@ -9,7 +10,7 @@ export function convertToCamelCase(value) {
             continue;
         }
 
-        if (value[i - 1] === "_") {
+        if (i === 0 || value[i - 1] === "_") {
             letters.push(value[i].toUpperCase());
         } else {
             letters.push(value[i]);

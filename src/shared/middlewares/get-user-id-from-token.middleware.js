@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-export function getUserFromToken(req, res, next) {
+export function getUserIdFromToken(req, res, next) {
     const token = req.cookies.accessToken;
     const key = process.env.SECRET_JWT_KEY;
 

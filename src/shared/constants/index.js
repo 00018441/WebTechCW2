@@ -3,3 +3,4 @@ export { Endpoint } from "./endpoints.constant.js";
 export { ErrorCode } from "./error-code.constant.js";
 export { Role } from "./roles.constant.js";
 export { Constants } from "./constants.constant.js";
+export { AuthorizationMode } from "./authorization-mode.constant.js";

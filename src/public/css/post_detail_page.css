@@ -1,0 +1,186 @@
+.post-detail-container::before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    border: 1px dashed #555;
+    border-radius: 8px;
+    background: transparent;
+    pointer-events: none;
+}
+
+.post-detail-container {
+    background-color: #000000;
+    border: 2px solid #444;
+    border-radius: 8px;
+    color: #ffffff;
+    padding: 30px;
+    width: 90%;
+    max-width: 1000px;
+    margin: 20px auto;
+    box-shadow: 4px 4px #333;
+    position: relative;
+
+    @media (max-width: 1024px) {
+        width: 90%;
+        max-width: 700px;
+    }
+
+    .post-meta-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 20px;
+        background-color: #000;
+        padding: 10px;
+        border-radius: 5px;
+
+        .post-meta {
+            flex-grow: 1;
+
+            .post-detail-row {
+                display: flex;
+                flex-direction: row;
+                margin-bottom: 8px;
+                align-items: baseline;
+                color: #fff;
+
+                .post-detail-label {
+                    color: #00ff00;
+                    font-size: 1.1em;
+                    text-align: left;
+                    margin-right: 10px;
+                    font-weight: bold;
+                }
+
+                .post-detail-value {
+                    font-size: 1.1em;
+                    color: #ffffff;
+                    word-break: break-word;
+                }
+
+                .newbie {
+                    font-style: italic;
+                    color: #6c757d;
+                }
+
+                .explorer {
+                    font-style: italic;
+                    color: #00bfff;
+                }
+
+                .expert {
+                    font-style: italic;
+                    color: #ffc107;
+                }
+            }
+
+            .post-detail-row:not(:last-of-type) {
+                margin-bottom: 15px;
+            }
+        }
+    }
+
+    .post-detail-description {
+        background-color: #000;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 15px 0;
+        border: 1px solid #333;
+    }
+
+    .post-detail-description-heading {
+        color: #00ff00;
+        font-size: 1.1em;
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-weight: bold;
+    }
+
+    .post-detail-description-content {
+        color: #ffffff;
+        line-height: 1.5;
+        margin: 0;
+        font-size: 1em;
+        word-break: break-word;
+        white-space: pre-wrap;
+    }
+}
+
+#post-detail-title {
+    color: #00ff00;
+    font-size: 2.5em;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-bottom: 1px dotted #00ff00;
+    padding-bottom: 20px;
+    text-shadow: 2px 2px 5px rgba(0, 255, 0, 0.5);
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+#post-settings-container {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px dotted #00ff00;
+    color: #00ff00;
+    font-size: 1em;
+    text-align: center;
+}
+
+.post-actions {
+    .edit-button {
+        margin: 5px 5px 0px 0px;
+        border-bottom: 1px dotted #555;
+        padding: 7px 12px;
+        font-size: 0.7em;
+        background-color: #2196f3;
+        color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition:
+            background-color 0.3s ease,
+            transform 0.3s ease;
+    }
+
+    .edit-button:hover {
+        background-color: #0d8aee;
+        transform: scale(1.08);
+    }
+
+    .edit-button:active {
+        background-color: #0c7cd5;
+        transform: scale(0.95);
+    }
+
+    .delete-button {
+        margin: 5px 5px 0px 0px;
+        border-bottom: 1px dotted #555;
+        padding: 7px 12px;
+        font-size: 0.7em;
+        background-color: #b01a28;
+        color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition:
+            background-color 0.3s ease,
+            transform 0.3s ease;
+    }
+
+    .delete-button:hover {
+        background-color: #c82333;
+        transform: scale(1.08);
+    }
+
+    .delete-button:active {
+        background-color: #dc3545;
+        transform: scale(0.95);
+    }
+}

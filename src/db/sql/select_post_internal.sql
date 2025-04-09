@@ -3,12 +3,21 @@
 -- $1 - id
 
 SELECT
-    id,
-    user_id,
-    title,
-    description,
-    updated_at,
-    created_at
+    posts.id,
+    posts.user_id,
+    users.username,
+    users.status,
+    posts.title,
+    posts.description,
+    posts.updated_at,
+    posts.created_at,
+    COALESCE(COUNT(post_settings.setting_id), 0) AS post_settings_count
 FROM csconfig.posts
+LEFT JOIN csconfig.users
+ON (posts.user_id = users.id)
+LEFT JOIN csconfig.post_settings
+ON (posts.id = post_settings.post_id)
 WHERE
-    id = $1;
+    posts.id = $1
+GROUP BY
+    posts.id, users.username, users.status;

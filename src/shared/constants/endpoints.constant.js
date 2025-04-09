@@ -9,16 +9,20 @@ export class Endpoint {
         static kHome = "/";
         static kUsers = "/api/pages/users";
         static kPosts = "/api/pages/posts";
+        static kPost = "/api/pages/posts";
     };
 
     static Api = class {
+        static kLogin = "/api/auth/login";
         static kLogout = "/api/auth/logout";
         static kRegister = "/api/auth/register";
-        static kLogin = "/api/auth/login";
+        static kStatusButtons = "/api/auth/status-buttons";
+
         static kProfile = "/api/users/profile";
         static kUserGet = "/api/users";
         static kUserDelete = "/api/users";
-        static kStatusButtons = "/api/auth/status-buttons";
+
         static kPosts = "/api/posts";
+        static kPostDelete = "/api/posts";
     };
 }

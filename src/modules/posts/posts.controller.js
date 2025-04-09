@@ -5,14 +5,14 @@ import { postsMinions } from "./minions/posts-minions.js";
 import { sharedMinions } from "#shared/minions/shared-minions.js";
 import { parameterize } from "#shared/utils/parameterize-ejs.util.js";
 import { createPostSchema, postsParamsSchema } from "./schemas/index.js";
-import { getUserFromToken } from "#shared/middlewares/index.js";
-import { StatusCode, Endpoint, Role, ErrorCode } from "#shared/constants/index.js";
+import { authorizeAccess, getUserIdFromToken } from "#shared/middlewares/index.js";
+import { StatusCode, Endpoint, Role, ErrorCode, AuthorizationMode } from "#shared/constants/index.js";
 import { validateRequestBody, validateQueryParams } from "#shared/validators/index.js";
 import { signSuccessMessageCookie, isRepeatedRequest, isEmpty } from "#shared/utils/index.js";
 
 export const PostsController = Router();
 
-PostsController.get(Endpoint.Forms.kNewPost, getUserFromToken, async function (req, res) {
+PostsController.get(Endpoint.Forms.kNewPost, getUserIdFromToken, async function (req, res) {
     try {
         req.logger.info(`sending post create form to user: ${res.locals.userId}`);
         if (!res.locals.userId) {
@@ -34,14 +34,14 @@ PostsController.get(Endpoint.Forms.kNewPost, getUserFromToken, async function (r
 PostsController.post(
     Endpoint.Api.kPosts,
     validateRequestBody(createPostSchema),
-    getUserFromToken,
+    getUserIdFromToken,
     async function (req, res) {
         try {
             req.logger.info(`create post request from user: ${res.locals.userId}`);
             if (!res.locals.userId) {
                 return res.status(StatusCode.kOk).send(
                     parameterize(sharedMinions.kErrorMessage, {
-                        message: "You are not allowed to view this resource",
+                        message: "You are not allowed to access this resource",
                     }),
                 );
             }
@@ -82,6 +82,7 @@ PostsController.get(Endpoint.Pages.kPosts, validateQueryParams(postsParamsSchema
             .map((post) => {
                 return parameterize(postsMinions.kPostCard, {
                     title: post.title,
+                    viewPostUrl: `${Endpoint.Pages.kPosts}/${post.id}`,
                     usernameWithTooltip: parameterize(postsMinions.kUsernameWithTooltip, {
                         username: post["username"],
                         userStatus: post["status"],
@@ -89,7 +90,7 @@ PostsController.get(Endpoint.Pages.kPosts, validateQueryParams(postsParamsSchema
                     }),
                     description:
                         post.description.length > 350 ? post.description.slice(0, 350) + "…" : post.description,
-                    createdAgo: format(post["created_at"]),
+                    createdAgo: format(new Date(post["created_at"]), "en_US"),
                     postSettingsCount: post["post_settings_count"],
                 });
             })
@@ -128,3 +129,65 @@ PostsController.get(Endpoint.Pages.kPosts, validateQueryParams(postsParamsSchema
         throw err;
     }
 });
+
+PostsController.get(
+    `${Endpoint.Pages.kPosts}/:postId`,
+    getUserIdFromToken,
+    authorizeAccess(AuthorizationMode.kSoft, Role.kMortal, Role.kAdmin),
+    async function (req, res) {
+        try {
+            const post = await PostsService.getPostById(req.params.postId);
+
+            res.status(StatusCode.kOk).send(
+                parameterize(postsMinions.kPostDetailPage, {
+                    title: post.title,
+                    createdAgo: format(post["created_at"], "en_US"),
+                    description: post.description,
+                    author: parameterize(postsMinions.kUsernameWithTooltip, {
+                        username: post["username"],
+                        userStatus: post["status"],
+                        publicUserInfoUrl: `${Endpoint.Api.kUserGet}/${post["user_id"]}`,
+                    }),
+                    editDeleteButtons: res.locals.isAuthorized
+                        ? parameterize(postsMinions.kPostEditDeleteButtons, {
+                              postEditUrl: `${Endpoint.Api.kPosts}/${post.id}`,
+                              postDeleteUrl: `${Endpoint.Api.kPosts}/${post.id}`,
+                          })
+                        : "",
+                    postSettingsCount: post["post_settings_count"],
+                }),
+            );
+        } catch (err) {
+            throw err;
+        }
+    },
+);
+
+PostsController.delete(
+    `${Endpoint.Api.kPostDelete}/:postId`,
+    getUserIdFromToken,
+    authorizeAccess(AuthorizationMode.kHard, Role.kMortal, Role.kAdmin),
+    async function (req, res) {
+        try {
+            const { postId } = req.params;
+            await PostsService.deletePost(postId);
+            req.logger.info(`deleted post ${postId}`);
+
+            res.setHeader("HX-Redirect", Endpoint.Pages.kHome);
+            signSuccessMessageCookie(
+                res,
+                parameterize(sharedMinions.kSuccessMessage, { message: "Post deleted successfully!" }),
+            );
+            res.status(StatusCode.kNoContent).send();
+        } catch (err) {
+            if (err.message === ErrorCode.kPostInvalidId) {
+                req.logger.info(`failed to delete post, invalid id`);
+                res.status(StatusCode.kOk).send(
+                    parameterize(sharedMinions.kErrorMessage, { message: "Invalid post Id" }),
+                );
+            } else {
+                throw err;
+            }
+        }
+    },
+);
