@@ -67,7 +67,9 @@ export function authorizeAccess(mode, ...roles) {
                 sendUnauthorized(mode, res, next);
             }
         } catch (err) {
-            if ([ErrorCode.kUserInvalidId, ErrorCode.kPostInvalidId].includes(err.message)) {
+            if (err.message === ErrorCode.kUserInvalidId) {
+                next();
+            } else if ([ErrorCode.kPostInvalidId].includes(err.message)) {
                 res.status(StatusCode.kOk).send(
                     parameterize(sharedMinions.kErrorMessage, {
                         message: "Something went wrong. The request is likely malformed.",
